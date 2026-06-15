@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const router = express.Router();
 
+const CLIENT_URL = (process.env.CLIENT_URL || 'http://localhost:5173').trim().replace(/\/$/, '');
+
 // @route   POST /api/auth/register
 // @desc    Register a new user with email and password
 router.post('/register', async (req, res) => {
@@ -83,10 +85,10 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 // @desc    Google auth callback
 router.get(
   '/google/callback',
-  passport.authenticate('google', { failureRedirect: `${process.env.CLIENT_URL}/login?error=true` }),
+  passport.authenticate('google', { failureRedirect: `${CLIENT_URL}/login?error=true` }),
   (req, res) => {
     // Successful authentication, redirect to frontend dashboard.
-    res.redirect(`${process.env.CLIENT_URL}/dashboard`);
+    res.redirect(`${CLIENT_URL}/dashboard`);
   }
 );
 

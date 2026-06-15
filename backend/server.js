@@ -18,7 +18,7 @@ require('./config/passport');
 
 // Middleware — must be set up BEFORE routes
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: (process.env.CLIENT_URL || 'http://localhost:5173').trim(),
   credentials: true,
 }));
 app.use(express.json());
