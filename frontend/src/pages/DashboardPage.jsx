@@ -6,6 +6,9 @@ import { useAppStore } from '../store/appStore';
 import { useAuth } from '../context/AuthContext';
 import NewsCard from '../components/NewsCard';
 
+// Fetch the base backend URL from your environment configuration
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+
 export default function DashboardPage() {
   const { status, user, update } = useAuth();
   const navigate = useNavigate();
@@ -56,7 +59,6 @@ export default function DashboardPage() {
 
     const getISTDateStrings = () => {
       const now = new Date();
-      // Shift local time to match target IST execution bounds
       const istOffset = 5.5 * 60 * 60 * 1000; 
       const todayIST = new Date(now.getTime() + (now.getTimezoneOffset() * 60 * 1000) + istOffset);
       
@@ -85,7 +87,8 @@ export default function DashboardPage() {
 
     const queryParams = new URLSearchParams(params);
 
-    fetch(`/api/articles?${queryParams.toString()}`, { signal, credentials: 'include' })
+    // Fixed: Prepended absolute API URL path for articles
+    fetch(`${API_BASE_URL}/api/articles?${queryParams.toString()}`, { signal, credentials: 'include' })
       .then((res) => {
         if (!res.ok) throw new Error('Failed to fetch articles');
         return res.json();
@@ -113,7 +116,8 @@ export default function DashboardPage() {
   const handleExamChange = async (pref) => {
     setExamPreference(pref);
     try {
-      await fetch('/api/user/preference', {
+      // Fixed: Prepended absolute API URL path for user preferences
+      await fetch(`${API_BASE_URL}/api/user/preference`, {
         method: 'PUT',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
@@ -180,7 +184,7 @@ export default function DashboardPage() {
 
       <section aria-label="Date Filters">
         <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-              {[
+          {[
             { id: 'today', label: 'Today' },
             { id: 'yesterday', label: 'Yesterday' },
             { id: 'previous', label: 'Previous News' }
