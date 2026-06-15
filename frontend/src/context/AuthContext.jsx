@@ -100,7 +100,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, status, loginGoogle, loginLocal, registerLocal, signOut, update, fetchSession }}>
+    <AuthContext.Provider value={{ user, status, loginGoogle, loginLocal, registerLocal, signOut, update }}>
       {children}
     </AuthContext.Provider>
   );

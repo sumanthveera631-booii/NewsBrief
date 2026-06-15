@@ -67,11 +67,8 @@ router.get(
   '/google/callback',
   passport.authenticate('google', { failureRedirect: `${process.env.CLIENT_URL}/login?error=true` }),
   (req, res) => {
-    // Successful authentication, redirect to frontend with a success indicator
-    // The session cookie is already set by passport.authenticate()
-    const redirectUrl = new URL(`${process.env.CLIENT_URL}/auth-callback`);
-    redirectUrl.searchParams.append('status', 'success');
-    res.redirect(redirectUrl.toString());
+    // Successful authentication, redirect to frontend dashboard.
+    res.redirect(`${process.env.CLIENT_URL}/dashboard`);
   }
 );
 
