@@ -5,6 +5,9 @@ import { User, Flame, Award, CheckCircle, HelpCircle, Trophy, LogOut, Sparkles }
 import { useAppStore } from '../store/appStore';
 import { useAuth } from '../context/AuthContext';
 
+// Safely bind the environment variable injected during the Render build phase
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+
 export default function ProfilePage() {
   const { status, user, signOut } = useAuth();
   const navigate = useNavigate();
@@ -23,7 +26,8 @@ export default function ProfilePage() {
     if (status !== 'authenticated') return;
     setLoading(true);
 
-    fetch('/api/user/profile', { credentials: 'include' })
+    // Concat the environment variable and explicitly pass credential tokens over CORS cross-origins
+    fetch(`${API_BASE_URL}/api/user/profile`, { credentials: 'include' })
       .then((res) => {
         if (!res.ok) throw new Error('Failed to load profile');
         return res.json();
@@ -32,7 +36,7 @@ export default function ProfilePage() {
         setProfileData(data);
       })
       .catch((err) => {
-        console.error(err);
+        console.error('Profile fetch error:', err);
       })
       .finally(() => {
         setLoading(false);
