@@ -32,9 +32,11 @@ app.use(session({
   saveUninitialized: false,
   store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    // Must be true in production to allow cross-site tracking securely
+    secure: process.env.NODE_ENV === 'production', 
     httpOnly: true,
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    // Change 'none' to allow the cookie to be sent on cross-site requests (Frontend <-> Backend)
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', 
     maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
   }
 }));
