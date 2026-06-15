@@ -25,6 +25,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
 // Express Session Middleware
 app.use(session({
   secret: process.env.SESSION_SECRET || 'fallback_secret_key',
@@ -32,15 +33,12 @@ app.use(session({
   saveUninitialized: false,
   store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
   cookie: {
-    // Must be true in production to allow cross-site tracking securely
-    secure: process.env.NODE_ENV === 'production', 
+    secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
-    // Change 'none' to allow the cookie to be sent on cross-site requests (Frontend <-> Backend)
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', 
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
     maxAge: 1000 * 60 * 60 * 24 * 7 // 7 days
   }
 }));
-
 // Passport Middleware
 app.use(passport.initialize());
 app.use(passport.session());
